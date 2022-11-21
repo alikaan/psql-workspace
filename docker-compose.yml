@@ -1,0 +1,39 @@
+# Use postgres/example user/password credentials
+version: '3.8'
+
+services:
+
+  psql-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - psql-db-vol:/data/postgres
+    ports:
+      - '5432:5432'
+    networks:
+      - pg-network
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: pgadmin
+    volumes:
+      - pgadmin-vol:/var/lib/pgadmin
+    ports:
+      - 5050:80
+    networks:
+      - pg-network
+    restart: unless-stopped
+
+networks:
+  pg-network:
+    driver: bridge
+
+volumes:
+  psql-db-vol:
+  pgadmin-vol:
